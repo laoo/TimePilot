@@ -6,8 +6,14 @@
 	beq @+
 	rts
 @	
-	lda gameSFXAllow
-	beq skipSFX
+	lda ntsc_counter
+	beq @+
+	dec ntsc_counter
+	bne @+
+	lda #7
+	sta ntsc_counter	
+	rts
+@	
 			
 sfxStart
 	ldx #3

@@ -22,7 +22,7 @@ playerFrameDraw			equ zeroPage+7	; 1 byte flag if we have to draw new player fra
 .endl
 gamePaused				equ zeropage+12 ; 1 byte    0 - game is running | 1 - game is paused
 gamePauseDelay			equ zeropage+13 ; 1 byte    delay before we can unpause/pause the game
-gameSFXAllow			equ zeroPage+14 ; 1 byte
+gameSFXAllow			equ zeroPage+14 ; 1 byte	[NOT USED ANYMORE]
 playerMovementAllow		equ zeroPage+15 ; 1 byte	
 bufScreenNr				equ zeroPage+16 ; 1 byte | high byte of screen address
 OLPCounter				equ zeroPage+17 ; 1 byte | temporal counter for object list (OLP) used in various logic
@@ -61,6 +61,8 @@ enemyBombCounter		equ	zeropage+53	; 1 byte	enemy bombs counter
 rapidusDetected			equ zeropage+54	; 1 byte	0 - running on 6502, $80 - running on 65c816. 
 fntAlloc				equ zeroPage+55	; 4 bytes 	fonts for enemies
 
+ntsc					equ zeropage+$3e ; 0 = PAL; other value = NTSC counter for VBL skip
+ntsc_counter			equ zeropage+$3f ; skip VBL sound by this frames; 0 to disable NTSC (during gameplay, FX)
 globalVelocityBuffer	equ zeropage+$40 ; -$7f ($3f bytes) fast global velocity buffer 
 		
 .local levelCurrent		; information about current level

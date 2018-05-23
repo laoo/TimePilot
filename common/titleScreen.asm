@@ -23,6 +23,8 @@
 		
 	lda SCORE.doHighScoreFlag
 	beq titleLoop	
+	lda ntsc
+	sta ntsc_counter
 	jmp SCORE.doHighScore
 	
 titleLoop
@@ -44,7 +46,7 @@ mode0
 	jmp skip
 mode1	
 	jsr titleScreenMode1
-	jmp skip
+	bne skip
 mode2	
 	jsr titleScreenMode2
 	jmp skip

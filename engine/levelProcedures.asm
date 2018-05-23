@@ -2,18 +2,18 @@
 ; Level Procedures
 
 .proc	level
-init				jmp	levelInit			;	 X = level number
-mainLoop			jmp levelMainLoop
-killEnemy			jmp levelKillEnemy
-nextLevelPrepare	jmp levelNextLevelPrepare
-nextLevelTeleport	jmp levelNextLevelTeleport
-nextLevel			jmp levelNextLevel
+; init				- inits level ; X = level number
+; mainLoop			- main level loop			
+; killEnemy			- progress bar			
+; nextLevelPrepare	- preparation for next level
+; nextLevelTeleport	- teleport
+; nextLevel			- sets all needed stuff for next level
 
 ; ---------------------------------------------
 ;	LEVEL MAIN LOOP - jump here every gameLoop
 ; ---------------------------------------------
 
-.proc levelMainLoop
+.proc mainLoop
 
 	lda playerGameOver
 	beq playLevel
@@ -33,6 +33,9 @@ playLevel
 	dec levelCurrent.allowSpawnsDelay
 	bne @+
 	inc levelCurrent.allowSpawns  ;  0 -> 1
+	
+	lda #0
+	sta ntsc_counter
 	
 	; dli mode for level gameplay | setup once after spawns are allowed
 	jsr waitFrameNormal
@@ -80,7 +83,7 @@ noHiScore
 	sta DLIDispatch.mode+1
 	jmp level.showGameOver
 @	
-	jmp level.levelInit.levelReset
+	jmp level.init.levelReset
 	
 playerNotDestroyed
 	; next level?
@@ -104,7 +107,7 @@ nextLevelLoop
 ;	NEXT LEVEL PREPARE
 ; --------------------
 
-levelNextLevelPrepare
+nextLevelPrepare
 	inc nextLevelInited 
 	
 	lda #0
@@ -124,7 +127,7 @@ nextLevelInited	dta b(0)
 ; X = level number
 ; ---------------------
 
-.proc levelNextLevelTeleport
+.proc nextLevelTeleport
 
 	lda RMT.trackn_idx		; synchronize teleport main animation with RMT subsong
 	cmp #101
@@ -398,7 +401,7 @@ fnt .he 00 00 00 00 00 00 00 ff
 ; X = level number
 ; ----------------
 
-.proc levelNextLevel
+.proc nextLevel
 	
 	jsr hidePlayer
 	jsr initPlayfieldPMColors
@@ -449,7 +452,7 @@ finish
 ;	INIT LEVEL
 ; X = level number
 ; ----------------	 	
-.proc levelInit	 
+.proc init	 
 		dex
 		stx levelNumber
 		txa
@@ -681,6 +684,9 @@ skipLevelName
 		lda #1
 		sta levelFullyInited
 		
+		lda ntsc
+		sta ntsc_counter
+		
 		jmp showPlayer
 		
 ; local data for routines	
@@ -892,7 +898,7 @@ counter dta b(0)
 ;	KILL ENEMY
 ; X = enemy number
 ; ----------------		
-.proc levelKillEnemy
+.proc killEnemy
 	lda levelCurrent.tokill
 	beq @+
 	dec levelCurrent.tokill		

@@ -58,7 +58,15 @@ copyFm4		equ $5400	; $200
 	.endr
 	inx
 	bne @-	
-		
+
+	; determines PAL or NTSC
+	ldx $d014
+	dex
+	beq @+
+	ldx #7
+@	
+	stx $f600	; game reads it and store information on zero page
+	
 	; finish	
 	jmp loader.enableOS
 

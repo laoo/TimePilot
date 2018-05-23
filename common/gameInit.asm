@@ -12,7 +12,7 @@
 	ldx #$80
 @	sta $00,x
 	inx
-	cpx #$3f
+	cpx #$3e
 	bne @-
 	
 	;A=0
@@ -26,7 +26,6 @@
 	sta player.animationDelay	
 	sta playerShotDelay
 	sta playerFrameDraw
-	sta gameSFXAllow
 	sta extraLifeValue								; first extra life after 10.000 (value 1 = 10.000 points)
 	sta firstRun
 	sta gameCurrentLevel
@@ -42,6 +41,9 @@
 
 	lda levelInformation.levelBackgroundColor		; first transition color
 	sta	playfieldTransition.color+1 
+	
+	lda ntsc
+	sta ntsc_counter
 	rts
 
 .endp
@@ -54,6 +56,8 @@
 	beq @+
 	jsr prepareForRapidus
 @	jsr setFakeDlist
+	lda $f600				; determined in loadGameGraphic
+	sta ntsc
 	jmp enableNMI
 .endp	
 
